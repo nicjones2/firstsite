@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DBT Skills E-Learning Course</title>
+<link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/alpinejs/3.5.2/cdn.js"></script>
+</head>
+<body class="bg-gray-100 text-gray-900">
+<div class="container mx-auto p-6" x-data="{
+    currentModule: null,
+    answers: {},
+    showResults: false,
+    email: '',
+    correctAnswers: 0,
+    submitQuiz() {
+        this.correctAnswers = Object.values(this.answers).filter(Boolean).length;
+        this.showResults = true;
+    },
+    sendEmail() {
+        window.location.href = `mailto:${this.email}?subject=DBT Skills Quiz Results&body=You got ${this.correctAnswers} out of 60 correct.`;
+    }
+}">
+<h1 class="text-4xl font-bold mb-4">DBT Skills E-Learning Course</h1>
+<p class="mb-6">Welcome to the DBT Skills E-Learning Course. This interactive course will guide you through key Dialectical Behavior Therapy (DBT) skills.</p>
+<div x-show="!showResults">
+    <template x-for="module in ['Mindfulness', 'Emotion Regulation', 'Interpersonal Effectiveness', 'Distress Tolerance']" :key="module">
+        <div class="bg-white shadow-md rounded-lg p-6 mb-4">
+            <h2 class="text-2xl font-semibold mb-2">Module: <span x-text="module"></span></h2>
+            <template x-for="i in 15">
+                <div class="mb-4">
+                    <p class="mb-2">Question <span x-text="i"></span>: If you were to describe your feelings without judgment, what would that sound like?</p>
+                    <input type="radio" :name="`${module}-q${i}`" x-model="answers[`${module}-q${i}`]" :value="true"> A. Calm and Observant
+                    <input type="radio" :name="`${module}-q${i}`" x-model="answers[`${module}-q${i}`]" :value="false"> B. Critical and Harsh
+                </div>
+            </template>
+        </div>
+    </template>
+    <button class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600" @click="submitQuiz">Submit Quiz</button>
+</div>
+<div x-show="showResults" class="text-center">
+    <h2 class="text-2xl font-bold mb-4">Quiz Results</h2>
+    <p>You answered <span x-text="correctAnswers"></span> out of 60 questions correctly.</p>
+    <input type="email" class="border px-2 py-1 rounded mt-4" placeholder="Enter your email" x-model="email">
+    <button class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 mt-2" @click="sendEmail">Email Results</button>
+</div>
+</div>
+</body>
+</html>
